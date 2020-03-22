@@ -30,8 +30,8 @@ const userSchema = new mongoose.Schema({
     date:{
         type: Date,
         default: Date.now
-    }
-
+    },
+      match_post:[{type:mongoose.Schema.Types.ObjectId, ref:'post'}]
 });
 
 module.exports = mongoose.model('User',userSchema);

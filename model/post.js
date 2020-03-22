@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const post = new mongoose.Schema({
-    posters_id: {
-        type: String,
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId, ref:'User',
         required: true,
     },
     price: {
@@ -51,6 +51,7 @@ const post = new mongoose.Schema({
     date:{
         type: Date,
         default: Date.now
+        
     }
 
 });

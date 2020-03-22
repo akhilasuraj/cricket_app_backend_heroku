@@ -1,9 +1,10 @@
 const Post = require('../model/post');
+const User = require('../model/User');
 
 
 exports.newpost = async (req,res,next) => {
  const newPost = new Post({
-    posters_id: req.body.posters_id,
+    user_id: req.body.posters_id,
     price: req.body.price,
     match_date: req.body.match_date,
     start_time: req.body.start_time,
@@ -22,20 +23,33 @@ exports.newpost = async (req,res,next) => {
  })
  console.log(req.file);
  try {
-    await newPost.save();
+    await newPost.save().then ( async result => {
+     await User.updateOne({_id:result.user_id},{$push:{ match_post:result._id}}).then(reslz =>{
+      res.json({success:1})
+      
+      }).catch(err => {
+         res.json({"error":err})
+      })
+    });
      console.log("Added new post");
-     res.json({success:1})
+    
  }catch(err){
     console.log("err new post:"+err);
     res.status(400).send(err);
  }
 }
 
-exports.loadPosts = async (req,res) => {
+exports.loadPostsByDate = async (req,res) => {
 
-      const posts= await Post.find() ;
-      console.log("loading posts");
+      const posts= await Post.find().sort( { match_date: 1 } )
+         console.log("loading posts");
+         res.json(posts);
+        };
+
+exports.loadPostsByPrice = async (req,res) => {
+
+       const posts= await Post.find().sort( { price: -1 } ) ;
+       console.log("loading posts");
       res.json(posts);
-
         };
     

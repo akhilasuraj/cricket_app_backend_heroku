@@ -30,5 +30,6 @@ const upload = multer({storage: storage, limits:{
 Post.use(cors());
 
 Post.post('/newpost',upload.single('postAttachment'),con_Post.newpost);
-Post.post('/load',con_Post.loadPosts);
+Post.post('/loadbydate',con_Post.loadPostsByDate);
+Post.post('/loadbyprice',con_Post.loadPostsByPrice);
 module.exports = Post ;
