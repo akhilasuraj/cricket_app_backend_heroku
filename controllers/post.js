@@ -21,14 +21,20 @@ exports.newpost = async (req,res,next) => {
     attachments: req.file.path,
 
  })
- console.log(req.file);
+
  try {
     await newPost.save().then ( async result => {
-     await User.updateOne({_id:result.user_id},{$push:{ match_post:result._id}}).then(reslz =>{
+     await User.updateOne({_id:result.user_id},{$push:{ match_post:result._id}}).then(async reslz =>{
       res.json({success:1})
+      console.log("adding post to user array:"+reslz)
+      await User.updateMany({_id: { $ne: result.user_id}},{$push:{ notifications:{_id:result._id,isViewed:0}}}).then(ress =>{
+         console.log("Notification added:"+ress);
+      }).catch(err=>{
+         console.log('error in notification adding:'+err);
+      })
       
       }).catch(err => {
-         res.json({"error":err})
+         res.json({"error in adding post to user array":err})
       })
     });
      console.log("Added new post");
@@ -40,16 +46,25 @@ exports.newpost = async (req,res,next) => {
 }
 
 exports.loadPostsByDate = async (req,res) => {
-
+      try{
       const posts= await Post.find().sort( { match_date: 1 } )
          console.log("loading posts");
          res.json(posts);
-        };
-
+        }catch(err){
+         console.log("err loadPostsByDate:"+err);
+         res.status(400).send(err);
+        }
+      }
 exports.loadPostsByPrice = async (req,res) => {
-
+   try{
        const posts= await Post.find().sort( { price: -1 } ) ;
        console.log("loading posts");
       res.json(posts);
-        };
+        }catch(err){
+         console.log("err loadPostsByPrice:"+err);
+         res.status(400).send(err);
+        }
+      }
+        
+
     

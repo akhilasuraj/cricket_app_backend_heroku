@@ -2,6 +2,7 @@ const express = require("express");
 const Post = express.Router();
 const cors = require("cors");
 const con_Post = require("../controllers/post");
+const con_Noti = require("../controllers/notifications");
 const multer = require('multer');
 
 const storage = multer.diskStorage({
@@ -32,4 +33,7 @@ Post.use(cors());
 Post.post('/newpost',upload.single('postAttachment'),con_Post.newpost);
 Post.post('/loadbydate',con_Post.loadPostsByDate);
 Post.post('/loadbyprice',con_Post.loadPostsByPrice);
+Post.post('/notifications',con_Noti.loadNotifications);
+
+
 module.exports = Post ;

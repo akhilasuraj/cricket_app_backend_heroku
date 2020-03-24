@@ -31,7 +31,20 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-      match_post:[{type:mongoose.Schema.Types.ObjectId, ref:'post'}]
+      match_post:[{
+          type:mongoose.Schema.Types.ObjectId, 
+          ref:'post'
+        }],
+      notifications:[{
+          _id:{
+              type:mongoose.Schema.Types.ObjectId,
+              ref:'post'
+            },
+          isViewed:{
+              type: Boolean
+          }, 
+          
+        }]
 });
 
 module.exports = mongoose.model('User',userSchema);

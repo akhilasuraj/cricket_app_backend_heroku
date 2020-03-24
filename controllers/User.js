@@ -36,7 +36,9 @@ exports.register= async (req,res) => {
        });
        try{
             const savedUser = await user.save();
-            res.send({ user : user._id});
+           // res.send({ user : user._id, success:1});
+           const token = await jwt.sign({_id: savedUser._id},process.env.TOKEN_SECRET,{ expiresIn:1440 })
+           res.header('auth-token',token).send(token);
        }catch(err){
            res.status(400).send(err);
        }
