@@ -52,7 +52,7 @@ exports.register= async (req,res) => {
    const { error } = loginValidation(req.body);
    if ( error ) return res.status(400).send(error.details[0].message);
    //checking the email exists
-    const user = await User.findOne({email: req.body.email});
+    const user = await User.findOne({email: req.body.email},{ match_post:0, notifications:0});
     if(!user) return res.status(400).send('Email is not found');
     // check password
     const validPass = await bcrypt.compare(req.body.password, user.password);
