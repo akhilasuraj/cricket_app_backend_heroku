@@ -37,7 +37,8 @@ exports.register= async (req,res) => {
        try{
             const savedUser = await user.save();
            // res.send({ user : user._id, success:1});
-           const token = await jwt.sign({savedUser},process.env.TOKEN_SECRET,{ expiresIn:1440 })
+           const user = await User.findOne({email: req.body.email},{ match_post:0, notifications:0,password:0});
+           const token = await jwt.sign({user},process.env.TOKEN_SECRET,{ expiresIn:1440 })
            res.header('auth-token',token).send(token);
        }catch(err){
            res.status(400).send(err);
@@ -52,7 +53,7 @@ exports.register= async (req,res) => {
    const { error } = loginValidation(req.body);
    if ( error ) return res.status(400).send(error.details[0].message);
    //checking the email exists
-    const user = await User.findOne({email: req.body.email},{ match_post:0, notifications:0});
+    const user = await User.findOne({email: req.body.email},{ match_post:0, notifications:0,password:0});
     if(!user) return res.status(400).send('Email is not found');
     // check password
     const validPass = await bcrypt.compare(req.body.password, user.password);
