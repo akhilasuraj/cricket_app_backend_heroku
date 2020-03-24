@@ -37,7 +37,7 @@ exports.register= async (req,res) => {
        try{
             const savedUser = await user.save();
            // res.send({ user : user._id, success:1});
-           const token = await jwt.sign({_id: savedUser._id},process.env.TOKEN_SECRET,{ expiresIn:1440 })
+           const token = await jwt.sign({savedUser},process.env.TOKEN_SECRET,{ expiresIn:1440 })
            res.header('auth-token',token).send(token);
        }catch(err){
            res.status(400).send(err);
@@ -58,7 +58,7 @@ exports.register= async (req,res) => {
     const validPass = await bcrypt.compare(req.body.password, user.password);
     if (!validPass) return res.status(400).send('Invalid password');
     //create token
-    const token = jwt.sign({_id: user._id},process.env.TOKEN_SECRET,{ expiresIn:1440 })
+    const token = jwt.sign({user},process.env.TOKEN_SECRET,{ expiresIn:1440 })
     res.header('auth-token',token).send(token);
     console.log("logged In");
    }else{
