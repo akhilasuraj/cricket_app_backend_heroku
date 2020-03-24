@@ -37,7 +37,7 @@ exports.register= async (req,res) => {
        try{
             const savedUser = await user.save();
            // res.send({ user : user._id, success:1});
-           const user = await User.findOne({email: req.body.email},{ match_post:0, notifications:0,password:0});
+           const user = await User.findOne({email: req.body.email},{ match_post:0, notifications:0});
            const token = await jwt.sign({user},process.env.TOKEN_SECRET,{ expiresIn:1440 })
            res.header('auth-token',token).send(token);
        }catch(err){
@@ -53,7 +53,7 @@ exports.register= async (req,res) => {
    const { error } = loginValidation(req.body);
    if ( error ) return res.status(400).send(error.details[0].message);
    //checking the email exists
-    const user = await User.findOne({email: req.body.email},{ match_post:0, notifications:0,password:0});
+    const user = await User.findOne({email: req.body.email},{ match_post:0, notifications:0});
     if(!user) return res.status(400).send('Email is not found');
     // check password
     const validPass = await bcrypt.compare(req.body.password, user.password);
@@ -64,13 +64,13 @@ exports.register= async (req,res) => {
     console.log("logged In");
    }else{
        // check mobile number exists
-    const user = await User.findOne({mobile_no: req.body.mobile_no});
+    const user = await User.findOne({mobile_no: req.body.mobile_no},{ match_post:0, notifications:0});
     if(!user) return res.status(400).send('Mobile number is not found');
     // check password
     const validPass = await bcrypt.compare(req.body.password, user.password);
     if (!validPass) return res.status(400).send('Invalid password');
     //create token
-    const token = jwt.sign({_id: user._id},process.env.TOKEN_SECRET,{ expiresIn:1440 })
+    const token = jwt.sign({user},process.env.TOKEN_SECRET,{ expiresIn:1440 })
     res.header('auth-token',token).send(token);
     console.log("logged In");
    }
