@@ -38,19 +38,20 @@ exports.register= async (req,res) => {
        try{
             const savedUser = await user.save();
            // res.send({ user : user._id, success:1});
-           const user = await User.findOne({email: req.body.email},{ match_post:0, notifications:0});
+          // const user = await User.findOne({email: req.body.email},{ match_post:0, notifications:0});
            const userToken={
-            _id:user._id,
-            first_name:user.first_name,
-            last_name:user.last_name,
-            mobile_no:user.mobile_no,
-            email:user.email,
+            _id:savedUser._id,
+            first_name:savedUser.first_name,
+            last_name:savedUser.last_name,
+            mobile_no:savedUser.mobile_no,
+            email:savedUser.email,
         
         }
            const token = await jwt.sign({userToken},process.env.TOKEN_SECRET,{ expiresIn:1440 })
            res.header('auth-token',token).send(token);
+           console.log("new user added")
        }catch(err){
-           res.status(400).send(err);
+           res.status(400).send("err:"+err);
        }
    };
    

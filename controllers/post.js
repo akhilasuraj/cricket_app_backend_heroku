@@ -1,10 +1,10 @@
 const Post = require('../model/post');
 const User = require('../model/User');
 
-
+// saving new match post
 exports.newpost = async (req,res,next) => {
  const newPost = new Post({
-    user_id: req.body.posters_id,
+   user_id: req.body.user_id,
     price: req.body.price,
     match_date: req.body.match_date,
     start_time: req.body.start_time,
@@ -27,6 +27,7 @@ exports.newpost = async (req,res,next) => {
      await User.updateOne({_id:result.user_id},{$push:{ match_post:result._id}}).then(async reslz =>{
       res.json({success:1})
       console.log("adding post to user array:"+reslz)
+      //adding post to users notification array
       await User.updateMany({_id: { $ne: result.user_id}},{$push:{ notifications:{_id:result._id,isViewed:0}}}).then(ress =>{
          console.log("Notification added:"+ress);
       }).catch(err=>{
@@ -44,7 +45,7 @@ exports.newpost = async (req,res,next) => {
     res.status(400).send(err);
  }
 }
-
+//load match posts odder by date
 exports.loadPostsByDate = async (req,res) => {
       try{
       const posts= await Post.find().sort( { match_date: 1 } )
@@ -55,6 +56,8 @@ exports.loadPostsByDate = async (req,res) => {
          res.status(400).send(err);
         }
       }
+
+//load match posts odder by price
 exports.loadPostsByPrice = async (req,res) => {
    try{
        const posts= await Post.find().sort( { price: -1 } ) ;
