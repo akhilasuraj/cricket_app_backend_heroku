@@ -18,7 +18,7 @@ exports.newpost = async (req,res,next) => {
     team_size: req.body.team_size,
     entrace_fee: req.body. entrace_fee,
     other_rules: req.body.other_rules,
-    attachments: req.file.path,
+    attachments: req.file.filename,
 
  })
 
@@ -46,8 +46,8 @@ exports.newpost = async (req,res,next) => {
  }
 }
 //load match posts odder by date
-exports.loadPostsByDate = async (req,res) => {
-      try{
+exports. = async (req,res) => {
+      try{loadPostsByDate
       const posts= await Post.find().sort( { match_date: 1 } )
          console.log("loading posts");
          res.json(posts);
