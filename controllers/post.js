@@ -18,8 +18,8 @@ exports.newpost = async (req,res,next) => {
     team_size: req.body.team_size,
     entrace_fee: req.body. entrace_fee,
     other_rules: req.body.other_rules,
-   // attachments: req.file.filename,
-   attachments: req.file.path,
+    attachments: req.file.filename,
+  // attachments: req.file.path,
 
  })
 
