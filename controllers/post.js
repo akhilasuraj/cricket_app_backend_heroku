@@ -46,7 +46,7 @@ exports.newpost = async (req,res,next) => {
  }
 }
 //load match posts odder by date
-exports. = async (req,res) => {
+exports = async (req,res) => {
       try{loadPostsByDate
       const posts= await Post.find().sort( { match_date: 1 } )
          console.log("loading posts");
